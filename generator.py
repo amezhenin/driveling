@@ -12,6 +12,22 @@ import argparse
 import cPickle as pickle
 from model import Model, State
 
+def main(model, state, k):
+    if len(state) < model._n:
+        print "Not enough words for initial state"
+        exit()
+    if len(state) > model._n:
+        state = state[-model._n:]
+
+    text = list(state)
+    for i in xrange(k):
+        state, res = model.get_next(state)
+        if res == None:
+            break
+        text.append(res)
+
+    print ' '.join(text)
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-m", "--model", type=str, required=True,
@@ -31,17 +47,5 @@ if __name__ == "__main__":
         exit()
 
     state = [i.decode('utf8') for i in args.start]
-    if len(state) < model._n:
-        print "Not enough words for initial state"
-        exit()
-    if len(state) > model._n:
-        state = state[-model._n:]
+    main(model, state, args.k)
 
-    text = list(state)
-    for i in xrange(args.k):
-        state, res = model.get_next(state)
-        if res == None:
-            break
-        text.append(res)
-
-    print ' '.join(text)

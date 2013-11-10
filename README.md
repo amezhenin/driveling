@@ -74,3 +74,68 @@ Examples:
     python generator.py -m save2.p -k 100 -s не мысля гордый
     python generator.py -m save2.p -k 100 -s asdf ff
     python generator.py -m save4.p -k 100 -s gnu
+    
+
+Оптимизация
+===========
+При обучении модели есть несколько неоптимальных операций:
+
+    Line #      Hits         Time  Per Hit   % Time  Line Contents
+    ==============================================================
+        52                                               def train_model(self, text):
+        53                                                   """
+        54                                                   Train model by given text. Initial state is taken from beginning of 
+        55                                                   text.
+        56                                                   """
+        57                                                   # remove punctuation
+        58         1         1078   1078.0      0.5          text = remove_punct(text)
+        59         1         3381   3381.0      1.5          text = text.decode('utf-8').lower()
+        60         1         3791   3791.0      1.7          words = text.split()
+        61                                           
+        62                                                   # not enough words
+        63         1            3      3.0      0.0          if len(words) < self._n:
+        64                                                       return
+        65                                           
+        66                                                   # building model
+        67         1            2      2.0      0.0          prev = words[:self._n]
+        68         1          415    415.0      0.2          words = words[self._n:]
+        69     25886        14694      0.6      6.4          for i in words:
+        70     25885       164796      6.4     72.2              self._train(tuple(prev), i)
+        71     25885        22845      0.9     10.0              prev.pop(0)
+        72     25885        17136      0.7      7.5              prev.append(i)
+    Line #      Hits         Time  Per Hit   % Time  Line Contents
+    ==============================================================
+        74                                               def _train(self, current, next):
+        75                                                   """
+        76                                                   Train model by adding new states in Markov chain
+        77                                                   """
+        78     25885        18608      0.7     11.4          if current not in self._model:
+        79     23490        84242      3.6     51.4              self._model[current] = State(current)
+        80     25885        15465      0.6      9.4          st = self._model[current]
+        81     25885        45566      1.8     27.8          st.add_next(next)
+
+
+В строках `prev.pop(0)` и `prev.append(i)` интерпретатору приходится перестраивать индекс. 
+Много времени уходит на выделение памяти под новые объекты `State`. 
+
+При генерации текста, самой нагрузной операцией является цикл в `State.get_next`:
+
+    Line #      Hits         Time  Per Hit   % Time  Line Contents
+    ==============================================================
+        31                                               def get_next(self):
+        32                                                   """
+        33                                                   Get next random state
+        34                                                   """
+        35       100          645      6.5      5.1          rnd = randrange(self._total_cnt)
+        36      3782         3852      1.0     30.6          for i in self._wrd.items():
+        37      3782         4127      1.1     32.8              rnd -= i[1]
+        38      3782         3466      0.9     27.5              if rnd < 0:
+        39       100          494      4.9      3.9                  return i[0]
+        40                                                   raise Exception('Random index out of range')
+
+При большом количествет возможных состояний это может быть критично. Для оптимизации 
+этой операции можно использовать (модифицированный) бинарный поиск. Бинарный поиск 
+нужно выполнять по кумулятивной сумме хитов(self._wrd.values()), поэтому этап обучения
+станет "дороже", но этап генерации станет "дешевле"( O(logN) вместо O(N) в `State.get_next`) 
+
+

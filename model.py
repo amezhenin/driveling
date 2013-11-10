@@ -11,10 +11,6 @@ class State(object):
         self._wrd = {}
         self._total_cnt = 0
         super(State, self).__init__()
-#     def __str__(self):
-#        return str(self._state)
-#     def __hash__(self):
-#         return hash(state)
 
     def add_next(self, next):
         self._total_cnt += 1
@@ -29,7 +25,7 @@ class State(object):
             rnd -= i[1]
             if rnd < 0:
                 return i[0]
-        return None
+        raise Exception('Random index out of range')
 
 
 class Model(object):

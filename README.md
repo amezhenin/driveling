@@ -4,7 +4,7 @@ driveling
 
 TODO
 ====
-* __slots__ for State
+
 
 Описание
 ========
@@ -39,4 +39,23 @@ TODO
 Реализация
 ==========
 * **trainer.py** - обучающий модуль
-* **generator.py** - эксплуатирующей модуль 
+* **generator.py** - эксплуатирующей модуль
+* **model.py** - классы модели и состояния цепи Маркова
+
+trainer.py
+==========
+usage: trainer.py [-h] [-f FILE [FILE ...]] [-u URL [URL ...]] -n N -o O
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -f FILE [FILE ...], --file FILE [FILE ...]
+                        local files to train model
+  -u URL [URL ...], --url URL [URL ...]
+                        url of remote files to train model
+  -n N                  order of markov chain
+  -o O                  file to save model
+
+Examples:
+    python trainer.py -n 1 -o save.p -f text.txt 
+    python trainer.py -n 2 -o save2.p -f text.txt
+    python trainer.py -n 2 -o save3.p -u https://raw.github.com/amezhenin/driveling/master/text.txt

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 This module generates text using trained model and some prefix words.
 

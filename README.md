@@ -35,42 +35,42 @@ driveling
 Реализация
 ==========
 * **trainer.py** - обучающий модуль
-* **generator.py** - эксплуатирующей модуль
+* **generator.py** - эксплуатирующий модуль
 * **model.py** - классы модели и состояния цепи Маркова
 
 trainer.py
 ==========
-usage: trainer.py [-h] [-f FILE [FILE ...]] [-u URL [URL ...]] -n N -o O
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -f FILE [FILE ...], --file FILE [FILE ...]
-                        local files to train model
-  -u URL [URL ...], --url URL [URL ...]
-                        url of remote files to train model
-  -n N                  order of markov chain
-  -o O                  file to save model
-
-Examples:
-    python trainer.py -n 1 -o save.p -f text.txt 
-    python trainer.py -n 2 -o save2.p -f text.txt
-    python trainer.py -n 2 -o save3.p -u https://raw.github.com/amezhenin/driveling/master/text.txt
-    python trainer.py -n 1 -o save4.p -u http://www.gnu.org/licenses/gpl-2.0.txt
+    usage: trainer.py [-h] [-f FILE [FILE ...]] [-u URL [URL ...]] -n N -o O
     
+    optional arguments:
+      -h, --help            show this help message and exit
+      -f FILE [FILE ...], --file FILE [FILE ...]
+                            local files to train model
+      -u URL [URL ...], --url URL [URL ...]
+                            url of remote files to train model
+      -n N                  order of markov chain
+      -o O                  file to save model
+    
+    Examples:
+        python trainer.py -n 1 -o save.p -f text.txt 
+        python trainer.py -n 2 -o save2.p -f text.txt
+        python trainer.py -n 2 -o save3.p -u https://raw.github.com/amezhenin/driveling/master/text.txt
+        python trainer.py -n 1 -o save4.p -u http://www.gnu.org/licenses/gpl-2.0.txt
+        
 generator.py
 ============
-usage: generator.py [-h] -m MODEL -s START [START ...] -k K
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -m MODEL, --model MODEL
-                        file with trained model
-  -s START [START ...], --start START [START ...]
-                        beginning of text(initial state)
-  -k K                  order of markov chain
-
-Examples:
-    python generator.py -m save2.p -k 100 -s не мысля
-    python generator.py -m save2.p -k 100 -s не мысля гордый
-    python generator.py -m save2.p -k 100 -s asdf ff
-    python generator.py -m save4.p -k 100 -s gnu
+    usage: generator.py [-h] -m MODEL -s START [START ...] -k K
+    
+    optional arguments:
+      -h, --help            show this help message and exit
+      -m MODEL, --model MODEL
+                            file with trained model
+      -s START [START ...], --start START [START ...]
+                            beginning of text(initial state)
+      -k K                  order of markov chain
+    
+    Examples:
+        python generator.py -m save2.p -k 100 -s не мысля
+        python generator.py -m save2.p -k 100 -s не мысля гордый
+        python generator.py -m save2.p -k 100 -s asdf ff
+        python generator.py -m save4.p -k 100 -s gnu

@@ -16,13 +16,13 @@ from model import Model
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-f", "--file", type=str, nargs='+',
-                    help="local files to train model")
+                        help="local files to train model")
     parser.add_argument("-u", "--url", type=str, nargs='+',
-                    help="url of remote files to train model")
+                        help="url of remote files to train model")
     parser.add_argument("-n", type=int, required=True,
-                    help="order of markov chain")
+                        help="order of markov chain")
     parser.add_argument("-o", type=str, required=True,
-                    help="file to save model")
+                        help="file to save model")
     args = parser.parse_args()
 
     texts = []

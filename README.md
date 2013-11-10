@@ -4,7 +4,7 @@ driveling
 
 TODO
 ====
-
+* __slots__ for State
 
 Описание
 ========

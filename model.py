@@ -1,5 +1,6 @@
 from random import randrange
 import string
+from collections import deque, defaultdict
 
 def remove_punct(text):
     return text.translate(string.maketrans("", ""), string.punctuation)
@@ -13,7 +14,7 @@ class State(object):
         # tuple with currents state, for debugging
         self._state = state
         # dict of words to which this state can lead
-        self._wrd = {}
+        self._wrd = defaultdict(int)
         # total number of seen states
         self._total_cnt = 0
         super(State, self).__init__()
@@ -23,10 +24,7 @@ class State(object):
         Add new edge or adjust weights 
         """
         self._total_cnt += 1
-        if next not in self._wrd:
-            self._wrd[next] = 1
-        else:
-            self._wrd[next] += 1
+        self._wrd[next] += 1
 
     def get_next(self):
         """
@@ -64,11 +62,11 @@ class Model(object):
             return
 
         # building model
-        prev = words[:self._n]
+        prev = deque(words[:self._n])
         words = words[self._n:]
         for i in words:
             self._train(tuple(prev), i)
-            prev.pop(0)
+            prev.popleft()
             prev.append(i)
 
     def _train(self, current, next):

@@ -137,3 +137,5 @@ generator.py
 этой операции можно использовать (модифицированный) бинарный поиск. Бинарный поиск 
 нужно выполнять по кумулятивной сумме хитов(self._wrd.values()), поэтому этап обучения
 станет "дороже", но этап генерации станет "дешевле"( O(logN) вместо O(N) в `State.get_next`) 
+
+**UPD.** Method `Model.train_model` was slightly optimised to use `deque` for iterating through words. 

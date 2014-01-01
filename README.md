@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/amezhenin/driveling.png?branch=master)](https://travis-ci.org/amezhenin/driveling)
+[![Coverage Status](https://coveralls.io/repos/amezhenin/driveling/badge.png)](https://coveralls.io/r/amezhenin/driveling)
 
 driveling
 =========

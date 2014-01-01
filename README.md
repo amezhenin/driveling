@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/amezhenin/driveling.png?branch=master)](https://travis-ci.org/amezhenin/driveling)
+
 driveling
 =========
 Тестовое задание для ТАРГЕТ.Mail.Ru

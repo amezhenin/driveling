@@ -14,26 +14,16 @@ You need to build generator of random texts using n-gram Markov chain. You solut
 
 Other parameter you should support is `n`, which you should use to build n-gram Markov chain. Resulting model should be saved to file or printed to `stdout`.
 
-**Exploitation component** на вход подаются начальный отрывок из n слов и
-число - количество слов, которые надо достроить по начальному отрывку и
-построенной обучающей частью марковской цепи, которую надо загрузить из
-файла. Если в какой-то момент программа не знает какую-то
-последовательность слов (не встречалась при построении марковской цепи),
-то на этом можно построение текста завершить. Вывод надо выдавать в
-поток стандартного вывода. Вход можно принимать как со стандартного
-потока ввода, так и указанием файлов и параметров в командной
-строке, но не хардкодить имена в тексте программы.
+**Exploitation component.** You are given starting snippet of text containing `n` words and number of words (`k`) you should generate using your model. Print words to `stdout`.
 
-Разумеется, ни на каких входных данных программа не должна падать,
-вместо этого при ошибке писать текст ошибки и корректно завершаться.
-Писать код надо принимая во внимание возможный большой объем данных
-и высокую скорость выполнения эксплуатирующей (а желательно и обучающей) части.
+Your program should handle all errors correctly and print all details before exiting (with proper code). You should optimize exploitation and training components to make them suitable for handling large amount of data (big data).
+
 
 Implementation
 ==============
 * **trainer.py** - train model
 * **generator.py** - exploitation module
-* **model.py** - calsses for model and state of Markov chain
+* **model.py** - classes for model and state of Markov chain
 
 trainer.py
 ==========
@@ -75,7 +65,7 @@ generator.py
 
 Optimization
 ============
-При обучении модели есть несколько неоптимальных операций:
+There is several suboptimal operations in **training component**:
 
     Line #      Hits         Time  Per Hit   % Time  Line Contents
     ==============================================================
@@ -112,10 +102,12 @@ Optimization
         81     25885        45566      1.8     27.8          st.add_next(next)
 
 
-В строках `prev.pop(0)` и `prev.append(i)` интерпретатору приходится перестраивать индекс. 
-Много времени уходит на выделение памяти под новые объекты `State`. 
+In lines `prev.pop(0)` and `prev.append(i)` interpreter have to rebuild index. 
+A lot of time is consumed by memory allocation for `State` objects. 
 
-При генерации текста, самой нагрузной операцией является цикл в `State.get_next`:
+**UPD.** Method `Model.train_model` was slightly optimized to use `deque` for iterating through words. 
+
+Loop `State.get_next` is them most time consuming part in **exploitation component** :
 
     Line #      Hits         Time  Per Hit   % Time  Line Contents
     ==============================================================
@@ -130,9 +122,5 @@ Optimization
         39       100          494      4.9      3.9                  return i[0]
         40                                                   raise Exception('Random index out of range')
 
-При большом количествет возможных состояний это может быть критично. Для оптимизации 
-этой операции можно использовать (модифицированный) бинарный поиск. Бинарный поиск 
-нужно выполнять по кумулятивной сумме хитов(self._wrd.values()), поэтому этап обучения
-станет "дороже", но этап генерации станет "дешевле"( O(logN) вместо O(N) в `State.get_next`) 
+With large amount of possible states it could be critical. This part can be optimized by using (customized) binary search. Binary search should be executed against cumulative sum of his (self._wrd.values()). With this change, training step will become more *"expensive"*, but exploitation step will be *"cheaper"* (O(logN) instead of O(N) in `State.get_next`) 
 
-**UPD.** Method `Model.train_model` was slightly optimised to use `deque` for iterating through words. 

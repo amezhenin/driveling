@@ -10,14 +10,9 @@ Description
 
 You need to build generator of random texts using n-gram Markov chain. You solution should consist two components: training and exploitation.
 
-**Training component** на вход подается список урлов, ведущих на текстовые
-файлы. Она должна скачать их, вызывая внутри curl и получая от него
-данные через пайп. Файлы содержат текст на естественном языке.
-Пунктуацию откидываем, морфологию учитывать не нужно, стоит лишь
-привести текcт к одному регистру, чтобы повысить заполняемость цепи.
-Также задается параметр n - порядок цепи. По входному тексту строится
-марковская цепь, и сохраняется в файл (можно выдавать в стандартный
-вывод).
+**Training component.** You are given set of URLs which leads to training text. Python program should download them with `curl` by receiving response data through pipe. Files will contain texts in natural language. You can skip punctuation and morphology, but convert text to lower case.
+
+Other parameter you should support is `n`, which you should use to build n-gram Markov chain. Resulting model should be saved to file or printed to `stdout`.
 
 **Exploitation component** на вход подаются начальный отрывок из n слов и
 число - количество слов, которые надо достроить по начальному отрывку и
